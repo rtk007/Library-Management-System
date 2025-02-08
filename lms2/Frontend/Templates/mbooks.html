@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Manage Books</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .manage-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 90%;
+            max-width: 1100px;
+            overflow-y: auto;
+            max-height: 90vh;
+            margin-top: 5%;
+        }
+
+        h2 {
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .add-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-5px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1E3A8A;
+            color: white;
+            cursor: pointer; /* Change cursor for sortable columns */
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .increase-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .increase-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px; /* Distance from top */
+            left: 20px; /* Distance from left */
+            background-color: #1E3A8A;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center; /* Aligns icon and text vertically */
+        }
+
+        .back-btn i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+
+        .back-btn:hover {
+            background-color: #3c6aa7;
+            transform: translateY(-2px);
+        }
+        
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #1E3A8A;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .navbar ul li {
+            display: inline;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            background-color: #f1c40f;
+            color: black;
+            border-radius: 5px;
+        }
+
+        .icon {
+            margin-right: 5px; /* Space between icon and text */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center the buttons */
+            align-items: center; /* Align items vertically */
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center; /* Center the search bar */
+        }
+
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        .sort-btn {
+            margin: 0 5px;
+            cursor: pointer;
+            background-color: #1E3A8A;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        .sort-btn:hover {
+            background-color: #8699b9;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'admin' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{% url 'mbooks' %}"><i class="fas fa-book"></i> Manage Books</a></li>
+            <li><a href="{% url 'musers' %}"><i class="fas fa-users"></i> Manage Users</a></li>
+            <li><a href="{% url 'bookissue' %}"><i class="fas fa-exclamation-circle"></i> Pending Returns</a></li>
+            <li><a href="{% url 'bookhistory' %}"><i class="fas fa-history"></i> All Transactions</a></li>
+        </ul>
+    </nav>
+    <div class="manage-container">
+        <a href="{% url 'admin' %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back </a>
+        <h2>Manage Books</h2>
+        
+        <a href="{% url 'addb' %}">
+            <button class="add-btn">Add New Book</button>
+        </a>
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search books..." id="search" oninput="filterBooks()">
+            <button class="sort-btn" onclick="sortTable('book_name')"><i class="fas fa-sort-alpha-down"></i> Sort by Name</button>
+            <button class="sort-btn" onclick="sortTable('author')"><i class="fas fa-sort-alpha-down"></i> Sort by Author</button>
+            <button class="sort-btn" onclick="removeSorting()"><i class="fas fa-times"></i> Remove Sorting</button>
+        </div>
+
+        
+        <table id="booksTable">
+            <thead>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Count</th>
+                    <th>Rack</th>
+                    <th>Shelf</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in book_list %}
+                <tr>
+                    <td>{{ book.book_id }}</td>
+                    <td>{{ book.book_name }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.count }}</td>
+                    <td>{{ book.rack }}</td>
+                    <td>{{ book.shelf }}</td>
+                    <td>
+                        <div class="button-container">
+                            <a href="{% url 'inc' book.pk %}">
+                                <button class="action-btn increase-btn" style="font-size: 18px;">
+                                    <img src="https://img.icons8.com/material-outlined/24/ffffff/plus-2-math.png" class="icon" alt="Increase">
+                                </button>
+                            </a>
+                            <a href="{% url 'dec' book.pk %}">
+                                <button class="action-btn increase-btn" style="font-size: 18px;">
+                                    <img src="https://img.icons8.com/material-outlined/24/ffffff/minus-2-math.png" class="icon" alt="Decrease">
+                                </button>
+                            </a>
+                            <a href="{% url 'del' book.pk %}">
+                                <button class="action-btn delete-btn" style="font-size: 18px;">
+                                    <img src="https://img.icons8.com/material-outlined/24/ffffff/delete-sign.png" class="icon" alt="Delete">
+                                </button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        function sortTable(column) {
+            const table = document.getElementById("booksTable");
+            const rows = Array.from(table.rows).slice(1);
+            let sortedRows;
+
+            if (column === 'book_id') {
+                sortedRows = rows.sort((a, b) => {
+                    const idA = parseInt(a.cells[0].textContent);
+                    const idB = parseInt(b.cells[0].textContent);
+                    return idA - idB;
+                });
+            } else if (column === 'book_name') {
+                sortedRows = rows.sort((a, b) => {
+                    const nameA = a.cells[1].textContent.toLowerCase();
+                    const nameB = b.cells[1].textContent.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+            } else if (column === 'author') {
+                sortedRows = rows.sort((a, b) => {
+                    const authorA = a.cells[2].textContent.toLowerCase();
+                    const authorB = b.cells[2].textContent.toLowerCase();
+                    return authorA.localeCompare(authorB);
+                });
+            }
+
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            sortedRows.forEach(row => table.appendChild(row));
+        }
+
+        function removeSorting() {
+            const table = document.getElementById("booksTable");
+            const rows = Array.from(table.rows).slice(1);
+            rows.sort((a, b) => {
+                const idA = parseInt(a.cells[0].textContent);
+                const idB = parseInt(b.cells[0].textContent);
+                return idA - idB;
+            });
+
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            rows.forEach(row => table.appendChild(row));
+        }
+
+        function filterBooks() {
+            const searchValue = document.getElementById("search").value.toLowerCase();
+            const table = document.getElementById("booksTable");
+            const rows = Array.from(table.rows).slice(1);
+
+            rows.forEach(row => {
+                const bookName = row.cells[1].textContent.toLowerCase();
+                const authorName = row.cells[2].textContent.toLowerCase();
+                const isVisible = bookName.includes(searchValue) || authorName.includes(searchValue);
+                row.style.display = isVisible ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

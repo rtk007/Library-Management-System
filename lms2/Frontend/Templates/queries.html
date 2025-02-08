@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Manage Books</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .manage-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 90%;
+            max-width: 1100px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        h2 {
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .add-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-5px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #163d7e;
+            background-size: cover;
+            color: white;
+            padding: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        td {
+            padding: 12px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .increase-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .increase-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center; /* Center the search bar */
+        }
+
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        .query-btn {
+            background-color: #FFC107;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+
+        .query-btn:hover {
+            background-color: #FFD700;
+            transform: translateY(-5px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #1E3A8A;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #163d7e;
+            transform: translateY(-2px);
+        }
+        
+        .icon-btn {
+            margin-right: 5px;
+        }
+
+        .clear-sort-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .clear-sort-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+    </style>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <a href="{% url 'fpage' %}" class="back-btn"> < Back </a>
+    <div class="manage-container">
+        <h2>BOOKS</h2>
+        <div class="faculty-info">
+            <p style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-user icon"></i> Faculty Name: <span style="color: #1E3A8A;">{{ faculty_name }}</span></p>
+            <p style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-id-card icon"></i> Faculty ID: <span style="color: #1E3A8A;">{{ faculty_id }}</span></p>
+        </div>
+        <input type="text" class="search-input" placeholder="Search books..." id="search" oninput="filterBooks()">
+        <button class="clear-sort-btn" onclick="clearSort()"><i class="fas fa-undo icon-btn"></i>Clear Sorting</button>
+        
+        <br>
+        
+        <div class="book-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book ID</th>
+                        <th onclick="sortTable(1)">Book Name <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable(2)">Author <i class="fas fa-sort"></i></th>
+                        <th>Count</th>
+                        <th>Rack</th>
+                        <th>Shelf</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="book-table-body">
+                    {% for book in book_list %}
+                    <tr>
+                        <td>{{ book.book_id }}</td>
+                        <td>{{ book.book_name }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.count }}</td>
+                        <td>{{ book.rack }}</td>
+                        <td>{{ book.shelf }}</td>
+                        <td>
+                            <form class="issue-form" method="POST" action="{% url 'issue' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="book_id" value="{{ book.book_id }}">
+                                <button type="submit" class="add-btn"><i class="fas fa-plus icon-btn"></i> Issue</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $('.issue-form').on('submit', function(e) {
+                    var confirmed = confirm('Are you sure you want to issue this book?');
+                    if (!confirmed) {
+                        e.preventDefault();  // Prevent form submission if not confirmed
+                    }
+                });
+        
+        function filterBooks() {
+            const searchValue = document.getElementById("search").value.toLowerCase().trim();
+            const tableBody = document.getElementById("book-table-body");
+            const rows = tableBody.getElementsByTagName("tr");
+        
+            for (let i = 0; i < rows.length; i++) {
+                const bookName = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase().trim();
+                const authorName = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase().trim();
+                const isVisible = bookName.includes(searchValue) || authorName.includes(searchValue);
+                rows[i].style.display = isVisible ? '' : 'none';
+            }
+        }
+        
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.querySelector("table");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function clearSort() {
+            var table = document.querySelector("table");
+            var rows = Array.from(table.rows).slice(1); // Exclude header row
+            rows.sort((a, b) => {
+                return a.cells[0].textContent.localeCompare(b.cells[0].textContent, undefined, {numeric: true});
+            });
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+        }
+    </script>
+</body>
+</html>

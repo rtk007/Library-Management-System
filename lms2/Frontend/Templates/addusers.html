@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Add User</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.9); /* Slight transparency */
+            backdrop-filter: blur(15px);
+            padding: 30px; /* Adjusted padding */
+            border-radius: 15px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            text-align: left; /* Align text to the left */
+        }
+
+        h2 {
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            font-size: 30px; /* Increased font size */
+            text-align: center; /* Center the heading */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch; /* Stretch form items to fill container */
+        }
+
+        label {
+            font-size: 18px; /* Increased font size */
+            color: #333;
+            margin-bottom: 8px; /* Increased margin */
+            align-self: flex-start; /* Align label to start */
+        }
+
+        .input-field {
+            position: relative; /* Position for icon placement */
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 40px; /* Added padding for icon space */
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box; /* Ensures padding is included in width */
+        }
+
+        input:focus {
+            border-color: #1E3A8A; /* Focus border color */
+            outline: none;
+        }
+
+        .icon {
+            position: absolute;
+            left: 10px; /* Icon position */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1E3A8A; /* Changed icon color to cool blue */
+        }
+
+        .submit-btn {
+            background-color: #1E3A8A; /* Changed to cool blue */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-bottom: 10px; /* Added margin below */
+        }
+
+        .submit-btn:hover {
+            background-color: #163d7e; /* Darker blue on hover */
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px; /* Distance from top */
+            left: 20px; /* Distance from left */
+            background-color: #1E3A8A;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #163d7e;
+            transform: translateY(-2px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Back button fixed at top-left corner -->
+    <a href="{% url 'musers' %}" class="back-btn"> &lt; Back </a>
+    <div class="form-container">
+        <h2>Add New User</h2>
+        <form id="add-user-form" method="POST" action="{% url 'addu' %}">
+            {% csrf_token %}
+            
+            <div class="input-field">
+                <label for="id_number">ID Number</label>
+                <i class="fas fa-id-card icon"></i>
+                <input type="text" id="id_number" name="id_number" placeholder="Enter ID Number" required>
+            </div>
+
+            <div class="input-field">
+                <label for="name">Name</label>
+                <i class="fas fa-user icon"></i>
+                <input type="text" id="name" name="name" placeholder="Enter Name" required>
+            </div>
+
+            <div class="input-field">
+                <label for="phone">Phone Number</label>
+                <i class="fas fa-phone icon"></i>
+                <input type="tel" id="phone" name="phone" placeholder="Enter Phone Number" required>
+            </div>
+
+
+            <div class="input-field">
+                <label for="email">Email</label>
+                <i class="fas fa-envelope icon"></i>
+                <input type="email" id="email" name="email" placeholder="Enter Email" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Add User</button>
+            <a href="{% url 'musers' %}">
+                <button type="button" class="cancel-btn">Cancel</button>
+            </a>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector('.submit-btn').addEventListener('click', function(e) {
+            const confirmed = confirm('Are you sure you want to add this user?');
+            if (!confirmed) {
+                e.preventDefault();  // Prevent form submission if not confirmed
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Manage Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .manage-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 90%;
+            max-width: 1100px;
+            overflow-y: auto;
+            max-height: 90vh;
+            margin-top: 8%;
+        }
+
+        h2 {
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
+            text-decoration: none;
+        }
+
+        .add-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-5px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-btn:active {
+            transform: translateY(1px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1E3A8A;
+            color: white;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .remove-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    
+        .remove-btn:hover {
+            background-color: #ff1a1a;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    
+        .remove-btn:active {
+            transform: translateY(1px);
+        }
+    
+        .remove-btn .icon {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+        }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #1E3A8A;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #163d7e;
+            transform: translateY(-2px);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #1E3A8A;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+    
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+    
+        .navbar ul li {
+            display: inline;
+        }
+    
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+        }
+    
+        .navbar ul li a:hover {
+            background-color: #c99a00;
+            border-radius: 5px;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .sort-button {
+            padding: 10px 15px;
+            background-color: #1E3A8A;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sort-button:hover {
+            background-color: #506994;
+        }
+
+        .sort-button i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'admin' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{% url 'mbooks' %}"><i class="fas fa-book"></i> Manage Books</a></li>
+            <li><a href="{% url 'musers' %}"><i class="fas fa-users"></i> Manage Users</a></li>
+            <li><a href="{% url 'bookissue' %}"><i class="fas fa-exclamation-circle"></i> Pending Returns</a></li>
+            <li><a href="{% url 'bookhistory' %}"><i class="fas fa-history"></i> All Transactions</a></li>
+        </ul>
+    </nav>
+
+    <div class="manage-container">
+        <h2>Manage Users</h2>
+        
+        <a href="{% url 'addu' %}">
+            <button class="add-btn">Add New User</button>
+        </a>
+
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search by Name or ID" id="searchInput" onkeyup="filterTable()">
+            <button class="sort-button" onclick="sortTable('name')"><i class="fas fa-sort-alpha-down"></i> Sort by Name</button>
+            <button class="sort-button" onclick="clearSorting()"><i class="fas fa-undo"></i> Clear Sorting</button>
+        </div>
+
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Phone No</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for faculty in faculty_list %}
+                <tr>
+                    <td>{{ faculty.name }}</td>
+                    <td>{{ faculty.id_number }}</td>
+                    <td>{{ faculty.phone }}</td>
+                    <td>{{ faculty.email }}</td>
+                    <td>
+                        <a href="{% url 'delu' faculty.id %}" class="delete-btn">
+                            <button class="remove-btn" type="button">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" alt="delete" class="icon">Delete
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'admin' %}">
+        <button class="back-btn">Back</button>
+    </a>
+
+    <script>
+        function filterTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById("userTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                const tdName = tr[i].getElementsByTagName("td")[0];
+                const tdId = tr[i].getElementsByTagName("td")[1];
+                if (tdName || tdId) {
+                    const txtValueName = tdName.textContent || tdName.innerText;
+                    const txtValueId = tdId.textContent || tdId.innerText;
+                    if (txtValueName.toLowerCase().indexOf(filter) > -1 || txtValueId.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function sortTable(criteria) {
+            const table = document.getElementById("userTable");
+            const rows = Array.from(table.rows).slice(1);
+            rows.sort((a, b) => {
+                const cellA = a.cells[0].innerText;
+                const cellB = b.cells[0].innerText;
+                return cellA.localeCompare(cellB);
+            });
+
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            rows.forEach(row => table.appendChild(row));
+        }
+
+        function clearSorting() {
+            const table = document.getElementById("userTable");
+            const rows = Array.from(table.rows).slice(1);
+            rows.sort((a, b) => a.rowIndex - b.rowIndex);
+
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            rows.forEach(row => table.appendChild(row));
+        }
+
+        window.onload = function() {
+            sortTable('name');
+        };
+    </script>
+</body>
+</html>

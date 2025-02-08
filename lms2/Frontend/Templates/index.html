@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Login</title>
+    <!-- Add Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+            opacity: 1;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+
+        body.slide-out {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        .welcome-message {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 750px;
+            margin-bottom: 10px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-message span {
+            color: #FFD700;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            max-width: 90%;
+            flex-wrap: wrap;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            width: 350px;
+        }
+
+        h2 {
+            color: #007FFF;
+            margin-bottom: 20px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2::before {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-container {
+            width: 100%;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-container i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007FFF;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 12px 12px 35px; /* Add space for icon inside the input */
+            margin: 10px 0;
+            border: 2px solid #007FFF;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #1E3A8A;
+            background: #F8FAFC;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #FFD700;
+            background: #FFF7E6;
+        }
+
+        .submit-btn {
+            background-color: #FFC107;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .submit-btn::before {
+            margin-right: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #FFD700;
+            transform: translateY(-5px);
+        }
+
+        #decodedCode {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007FFF;
+            text-align: center;
+        }
+
+        #scanner {
+            width: 350px;
+            height: 250px;
+            border: 2px solid #007FFF;
+            border-radius: 10px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        #scanner video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Admin button styling */
+        .admin-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #FF0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            z-index: 10;
+        }
+
+        .admin-btn:hover {
+            background-color: #163d7e;
+            transform: translateY(-2px);
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #scanner, .login-container {
+                width: 90%;
+            }
+
+            .welcome-message {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Message -->
+    <div class="welcome-message">
+        Welcome to the <span>Library Portal</span> - Your gateway to knowledge and resources!
+    </div>
+
+    <div class="container">
+        <!-- Login Form -->
+        <div class="login-container">
+            <h2>Faculty Login</h2>
+            <form id="barcodeForm" action="{% url 'verify_barcode' 'dummy_id' %}" method="POST">
+                {% csrf_token %}
+                <!-- Admin ID Input with user icon -->
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="admin_id" placeholder="Admin ID" required>
+                </div>
+                <button type="button" class="submit-btn" id="loginButton">Login</button>
+            </form>
+            <div id="decodedCode">Decoded Code Will Appear Here</div>
+        </div>
+
+        <!-- Scanner -->
+        <div id="scanner"></div>
+    </div>
+
+    <!-- Admin Button -->
+    <a href="{% url 'apage' %}">
+        <button class="admin-btn" id="adminButton">Go to Admin Page</button>
+    </a>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Quagga
+            Quagga.init({
+                inputStream: {
+                    type: "LiveStream",
+                    target: document.querySelector('#scanner'),
+                    constraints: {
+                        facingMode: "environment"
+                    }
+                },
+                decoder: {
+                    readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader"],
+                    multiple: false
+                }
+            }, function(err) {
+                if (err) {
+                    console.error("Quagga initialization error:", err);
+                    return;
+                }
+                Quagga.start();
+            });
+
+            // Handle barcode detection
+            Quagga.onDetected(function(result) {
+                if (result && result.codeResult && result.codeResult.code) {
+                    var code = result.codeResult.code;
+                    var decodedCodeDiv = document.getElementById('decodedCode');
+
+                    decodedCodeDiv.textContent = `Decoded Code: ${code}`;
+
+                    var inputField = document.querySelector('[name="admin_id"]');
+                    inputField.value = code;
+
+                    var form = document.getElementById('barcodeForm');
+                    form.action = form.action.replace('dummy_id', code);
+
+                    Quagga.stop();
+                    document.getElementById('scanner').style.display = 'none';
+
+                    setTimeout(function() {
+                        document.body.classList.add('slide-out');
+                        setTimeout(function() {
+                            form.submit();
+                        }, 500);
+                    }, 2000);
+                } else {
+                    alert("No valid barcode detected. Please try again.");
+                }
+            });
+
+            // Handle transition for the Login button
+            document.getElementById('loginButton').addEventListener('click', function() {
+                document.body.classList.add('slide-out');
+                setTimeout(function() {
+                    document.getElementById('barcodeForm').submit();
+                }, 500);
+            });
+
+            // Admin Button Transition
+            document.getElementById('adminButton').addEventListener('click', function(event) {
+                event.preventDefault();
+                document.body.classList.add('slide-out');
+                setTimeout(function() {
+                    window.location.href = "{% url 'apage' %}";
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

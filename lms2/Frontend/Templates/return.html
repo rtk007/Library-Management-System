@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Return Books</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .return-container {
+            background: rgba(255, 255, 255, 0.9); /* Slight transparency for backdrop */
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 90%;
+            max-width: 1100px;
+            overflow-y: auto;
+            max-height: 90vh;
+            padding-bottom: 50px; /* Added padding for better spacing */
+        }
+
+        h2 {
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .faculty-info {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #4A4A4A; /* Dark grey for the faculty info */
+            font-weight: bold; /* Emphasizing the text */
+        }
+
+        .faculty-info p {
+            margin: 5px 0; /* Added margin for better spacing */
+        }
+
+        .faculty-info .icon {
+            margin-right: 10px; /* Space between icon and text */
+            color: #1E3A8A; /* Color for icons */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1E3A8A;
+            color: white;
+            cursor: pointer;
+        }
+
+        td {
+            color: #333; /* Dark color for table text */
+        }
+
+        .issued-date {
+            color: green; /* Color for Issued Date */
+        }
+
+        .due-date {
+            color: red; /* Color for Due Date */
+        }
+
+        .return-btn {
+            background-color: #1E3A8A; /* Button color */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .return-btn:hover {
+            background-color: #163d7e; /* Darker shade on hover */
+            transform: translateY(-2px);
+        }
+
+        /* Scrollbar customization */
+        .return-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .return-container::-webkit-scrollbar-thumb {
+            background-color: #1E3A8A;
+            border-radius: 5px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #1E3A8A;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #163d7e;
+            transform: translateY(-2px);
+        }
+
+        .sort-controls {
+            margin-bottom: 20px;
+        }
+
+        .sort-btn, .clear-sort-btn {
+            background-color: #1E3A8A;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .sort-btn:hover, .clear-sort-btn:hover {
+            background-color: #163d7e;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Back button fixed at top-left corner -->
+    <a href="{% url 'fpage' %}" class="back-btn"> < Back </a>
+    <div class="return-container">
+        <h2>Return Books</h2>
+        <div class="faculty-info">
+            <p style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-user icon"></i> Faculty Name: <span style="color: #1E3A8A;">{{ faculty_name }}</span></p>
+            <p style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-id-card icon"></i> Faculty ID: <span style="color: #1E3A8A;">{{ faculty_id }}</span></p>
+        </div>
+        <div class="sort-controls">
+            <button class="sort-btn" data-sort="name">Sort by Name</button>
+            <button class="sort-btn" data-sort="author">Sort by Author</button>
+            <button class="clear-sort-btn">Clear Sorting</button>
+        </div>
+        <table id="books-table">
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Issued Date</th>
+                    <th>Due Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for issued in issued_books %}
+                <tr>
+                    <td>{{ issued.book.book_name }}</td>
+                    <td>{{ issued.book.author }}</td>
+                    <td class="issued-date">{{ issued.issue_date }}</td> <!-- Issued Date in green -->
+                    <td class="due-date">{{ issued.due_date }}</td> <!-- Due Date in red -->
+                    <td>
+                        <form class="return-form" action="{% url 'return_book' issued.book.book_id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="return-btn" type="submit">Return</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Add confirmation popup for return button
+            $('.return-form').on('submit', function(e) {
+                var confirmed = confirm('Are you sure you want to return this book?');
+                if (!confirmed) {
+                    e.preventDefault();  // Prevent form submission if not confirmed
+                }
+            });
+
+            // Sorting functionality
+            $('.sort-btn').on('click', function() {
+                var sortBy = $(this).data('sort');
+                var rows = $('#books-table tbody tr').get();
+
+                rows.sort(function(a, b) {
+                    var A = $(a).children('td').eq(getColumnIndex(sortBy)).text().toUpperCase();
+                    var B = $(b).children('td').eq(getColumnIndex(sortBy)).text().toUpperCase();
+
+                    if (A < B) {
+                        return -1;
+                    }
+                    if (A > B) {
+                        return 1;
+                    }
+                    return 0;
+                });
+
+                $.each(rows, function(index, row) {
+                    $('#books-table').children('tbody').append(row);
+                });
+            });
+
+            // Clear sorting
+            $('.clear-sort-btn').on('click', function() {
+                location.reload();
+            });
+
+            function getColumnIndex(sortBy) {
+                switch(sortBy) {
+                    case 'name': return 0;
+                    case 'author': return 1;
+                    default: return 0;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

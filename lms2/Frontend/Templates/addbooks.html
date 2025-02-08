@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Add Book</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px; /* Space around the body */
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 30px; /* Increased padding */
+            border-radius: 10px; /* Slightly smaller border radius */
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Reduced shadow size */
+            width: 90%;
+            max-width: 600px; /* Increased max-width for a bigger container */
+            text-align: left; /* Left-align text */
+            margin: auto; /* Center the container */
+        }
+
+        h2 {
+            color: #1E3A8A;
+            margin-bottom: 20px; /* Increased margin */
+            font-size: 28px; /* Increased font size */
+            text-align: center; /* Center the title */
+        }
+
+        form {
+            display: flex;
+            flex-direction: row; /* Align input groups in a row */
+            justify-content: space-between; /* Space fields evenly */
+            flex-wrap: wrap; /* Allow wrapping for smaller screens */
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Align labels and inputs vertically */
+            margin-bottom: 20px; /* Space between input groups */
+            width: 48%; /* Allow two input groups side by side */
+        }
+
+        label {
+            font-size: 16px; /* Increased font size */
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .input-with-icon {
+            position: relative; /* Set position relative for absolute positioning of icon */
+        }
+
+        .input-with-icon i {
+            position: absolute; /* Position icon inside input */
+            left: 10px; /* Distance from left */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust vertical position */
+            color: #1E3A8A; /* Icon color */
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%; /* Full width for inputs */
+            padding: 12px; /* Increased padding */
+            padding-left: 40px; /* Add padding for space for icon */
+            border: 1px solid #ccc;
+            border-radius: 6px; /* Slightly smaller border radius */
+            font-size: 16px; /* Increased font size */
+            box-sizing: border-box; /* Include padding and border in width */
+        }
+
+        .submit-btn {
+            background-color: #1E3A8A;
+            color: white;
+            padding: 12px; /* Increased padding */
+            border: none;
+            border-radius: 6px; /* Slightly smaller border radius */
+            cursor: pointer;
+            font-size: 18px; /* Increased font size */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-top: 20px; /* Space above button */
+        }
+
+        .submit-btn:hover {
+            background-color: #163d7e;
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 12px; /* Increased padding */
+            border: none;
+            border-radius: 6px; /* Slightly smaller border radius */
+            cursor: pointer;
+            font-size: 18px; /* Increased font size */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-top: 10px; /* Space above button */
+        }
+
+        .cancel-btn:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px; /* Distance from top */
+            left: 20px; /* Distance from left */
+            background-color: #006eff;
+            color: white;
+            padding: 12px 20px; /* Adjusted padding */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px; /* Increased font size */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+            text-decoration: none;
+            display: flex;
+            align-items: center; /* Center icon and text */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
+        }
+
+        .back-btn:hover {
+            background-color: #163d7e;
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Shadow effect on hover */
+        }
+
+        .back-btn i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'mbooks' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="form-container">
+        <h2>Add New Book</h2>
+        <form id="add-book-form" method="POST" action="{% url 'addb' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="book_id">Book ID</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                    <input type="text" id="book_id" name="book_id" placeholder="Enter Book ID" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="book_name">Book Name</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-book-open" aria-hidden="true"></i>
+                    <input type="text" id="book_name" name="book_name" placeholder="Enter Book Name" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="author">Author</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <input type="text" id="author" name="author" placeholder="Enter Author Name" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="count">Count</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-sort-numeric-up" aria-hidden="true"></i>
+                    <input type="number" id="count" name="count" placeholder="Enter Book Count" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="rack">Rack</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-box" aria-hidden="true"></i>
+                    <input type="text" id="rack" name="rack" placeholder="Enter Rack Number" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="shelf">Shelf</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                    <input type="text" id="shelf" name="shelf" placeholder="Enter Shelf Number" required>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Add Book</button>
+            <a href="{% url 'mbooks' %}">
+                <button type="button" class="cancel-btn">Cancel</button>
+            </a>
+        </form>
+    </div>
+</body>
+</html>

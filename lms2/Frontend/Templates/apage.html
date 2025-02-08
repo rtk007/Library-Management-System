@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Admin Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.9); /* Slight opacity */
+            backdrop-filter: blur(15px);
+            padding: 50px 40px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 350px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        h2 {
+            color: #1E3A8A; /* Consistent with the specified blue shade */
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-container {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .input-container i {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #1E3A8A; /* Icon color */
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 40px 12px 35px; /* Added space for the icon */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input::placeholder {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .submit-btn {
+            background-color: #FF4500;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #FF6347;
+            transform: translateY(-5px);
+        }
+
+        .faculty-login {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .faculty-login img {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .faculty-login img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+    <!-- Including Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form action="{% url 'apage' %}" method="POST">
+            {% csrf_token %}
+            <div class="input-container">
+                <i class="fas fa-user"></i>
+                <input type="text" name="admin_id" placeholder="Admin ID" required>
+            </div>
+            <div class="input-container">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+    </div>
+    <!-- Faculty Login Button -->
+    <a href="{% url 'index' %}" class="faculty-login">
+        <img src="https://img.icons8.com/fluent/48/000000/login-rounded-right.png" alt="Faculty Login">
+    </a>
+</body>
+</html>

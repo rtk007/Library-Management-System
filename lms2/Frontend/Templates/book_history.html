@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Book History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/1b/9d/28/1b9d28415cc408a4ef4c0e3336a78475.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .manage-container {
+            background: rgb(255, 255, 255); /* Reduced opacity */
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 90%;
+            max-width: 1100px;
+            overflow-y: auto;
+            max-height: 90vh;
+            margin-top: 12%;
+        }
+
+        h2 {
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #1E3A8A;
+            outline: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1E3A8A;
+            color: white;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px; /* Distance from top */
+            left: 20px; /* Distance from left */
+            background-color: #1E3A8A;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center; /* Aligns icon and text vertically */
+        }
+
+        .back-btn i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+
+        .back-btn:hover {
+            background-color: #7187ad;
+            transform: translateY(-2px);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #1E3A8A;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000; /* Ensure the menu is always on top */
+        }
+    
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+    
+        .navbar ul li {
+            display: inline;
+        }
+    
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center; /* Aligns icon and text vertically */
+        }
+
+        .navbar ul li a i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+    
+        .navbar ul li a:hover {
+            background-color: #c99a00;
+            border-radius: 5px;
+        }
+
+        .issued {
+            color: red; /* Red for issued */
+        }
+
+        .returned {
+            color: green; /* Green for returned */
+        }
+
+        /* Button styles */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            width:100%;
+            justify-content: center; /* Center the search bar */
+        }
+        
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 75%;
+            margin-right: 10px;
+        }
+        .sort-btn {
+            float:right;
+            margin-right: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            background-color: #1E3A8A;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width:310px;
+            transition: background-color 0.3s;
+        }
+
+        .sort-btn:hover {
+            background-color: #526fa1;
+        }
+    </style>
+    <script>
+        let originalRows = [];
+
+        window.onload = function() {
+            const table = document.getElementById("historyTable");
+            const rows = Array.from(table.rows).slice(1); // Get rows excluding header
+            originalRows = rows.map(row => row.cloneNode(true)); // Clone original rows
+        };
+
+        function filterTable() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const table = document.getElementById("historyTable");
+            const rows = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td");
+                let match = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j]) {
+                        const cellValue = cells[j].textContent || cells[j].innerText;
+                        if (cellValue.toLowerCase().indexOf(input) > -1) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                rows[i].style.display = match ? "" : "none"; // Show or hide the row
+            }
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById("historyTable");
+            const rows = Array.from(table.rows).slice(1);
+            const sortedRows = rows.sort((a, b) => {
+                const cellA = a.cells[columnIndex].textContent.trim();
+                const cellB = b.cells[columnIndex].textContent.trim();
+                return cellA.localeCompare(cellB);
+            });
+
+            // Clear the table and append the sorted rows
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+            sortedRows.forEach(row => table.appendChild(row));
+        }
+
+        function removeSorting() {
+            const table = document.getElementById("historyTable");
+
+            // Clear the table and append the original rows
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+            originalRows.forEach(row => table.appendChild(row.cloneNode(true))); // Append cloned original rows
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar">
+    <ul>
+        <li><a href="{% url 'admin' %}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+        <li><a href="{% url 'mbooks' %}"><i class="fas fa-book"></i>Manage Books</a></li>
+        <li><a href="{% url 'musers' %}"><i class="fas fa-users"></i>Manage Users</a></li>
+        <li><a href="{% url 'bookissue' %}"><i class="fas fa-exclamation-circle"></i>Pending Returns</a></li>
+        <li><a href="{% url 'bookhistory' %}"><i class="fas fa-history"></i>All Transactions</a></li>
+    </ul>
+</nav>
+
+    <div class="manage-container">
+        <h2>All Transactions</h2>
+        
+        <!-- Sorting Buttons -->
+        <div class="search-bar">
+            <input type="text" iclass="search-input" placeholder="Search by faculty name, book name, or action..." onkeyup="filterTable()">
+            <button class="sort-btn" onclick="sortTable(0)"><i class="fas fa-sort-alpha-down"></i> Sort by Faculty Name</button>
+            <button class="sort-btn" onclick="sortTable(1)"><i class="fas fa-sort-alpha-down"></i> Sort by Book Name</button>
+            <button class="sort-btn" onclick="removeSorting()"><i class="fas fa-undo"></i> Remove Sorting</button>
+        </div>
+        
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Faculty Name</th>
+                    <th>Book Name</th>
+                    <th>Action</th>
+                    <th>Date & Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in book_history_list %}
+                <tr>
+                    <td>{{ history.faculty.name }}</td>
+                    <td>{{ history.book.book_name }}</td>
+                    <td class="{{ history.get_action_display|lower }}">{{ history.get_action_display }}</td>
+                    <td>{{ history.date_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{% url 'admin' %}" class="back-btn"><i class="fas fa-arrow-left"></i>Back</a>
+    </div>
+</body>
+</html>
