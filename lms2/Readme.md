@@ -97,8 +97,8 @@ Ensure you have the following installed:
 - **`db.sqlite3`:** The SQLite database file storing application data.
 
 ## Customization
-- To modify the UI, update files in `libraryapp/templates/` and `libraryapp/static/`.
-- For backend logic, edit `libraryapp/views.py`, `libraryapp/models.py`, and `libraryapp/forms.py`.
+- To modify the UI, update files in `library/templates/` and `libraryapp/static/`.
+- For backend logic, edit `libraryapp/views.py`, `library/models.py`, and `library/forms.py`.
 - For barcode authentication, modify the QuaggaJS integration in the templates.
 
 In the env file add your email backend id and required email fields
