@@ -80,6 +80,7 @@ Ensure you have the following installed:
    python manage.py runserver
    ```
    Open your browser and navigate to `http://127.0.0.1:8000/` to see the application.
+7. **SMTP setup**: use a two factor authenticated mail id and get the hashed password from the service provider use a .env file put them in and use them as in the settings.py
 
 ## Barcode Authentication Setup
 - Integrate QuaggaJS in your frontend templates located in `libraryapp/templates/`.
@@ -92,7 +93,7 @@ Ensure you have the following installed:
 
 ## Directory Details
 - **`LibMS/`:** Contains project-level settings and configurations.
-- **`libraryapp/`:** The main app managing books, members, forms, views, templates, and static files.
+- **`library/`:** The main app managing books, members, forms, views, templates, and static files.
 - **`db.sqlite3`:** The SQLite database file storing application data.
 
 ## Customization
