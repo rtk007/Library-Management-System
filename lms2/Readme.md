@@ -97,5 +97,3 @@ For any inquiries or support, please contact Ratik Krishna M P at ratikkrishna15
 Developed By
 This project was entirely designed, developed, and implemented by Ratik Krishna M P as part of a team collaboration. While teammates contributed to discussions, research, and documentation, the complete backend and frontend development were handled by me.
 
-🔒 Original Work Protection:
-This repository is timestamped on GitHub, proving its originality. Unauthorized usage, redistribution, or copying without proper credit is not permitted.
