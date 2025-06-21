@@ -1,5 +1,5 @@
 LMS2 - Library Management System
-This is LMS2, a Library Management System that uses QuaggaJS for barcode-based authentication and a Django backend for data management. It facilitates efficient handling of library operations such as book borrowing, returning, and member management.
+This is LMS2, a Library Management System that uses QuaggaJS for barcode-based authentication and a Django backend for data management. It facilitates efficient handling of library operations such as book borrowing, returning, and member management. This project has no live links to show the demo instead i have uploaded the images of the working prototype inside the lms2 Directory.
 
 Features
 Barcode-based authentication using QuaggaJS
